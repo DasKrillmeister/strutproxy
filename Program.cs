@@ -33,7 +33,7 @@ app.MapPost("/", async context =>
 
     var response = await SendRequestToGeminiApi(bodyText);
 
-    context.Response.ContentType = "text/plain";
+    context.Response.ContentType = "text/plain; charset=UTF-8";
     await context.Response.WriteAsync(response);
 
 
@@ -57,14 +57,13 @@ static async Task<string> SendRequestToGeminiApi(string bodyText)
     }
     };
 
-    var json = JsonSerializer.Serialize(requestBody);
-    var content = new StringContent(json, Encoding.UTF8, "application/json");
+    var content = JsonContent.Create(requestBody);
 
     var response = await httpClient.PostAsync($"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}", content);
 
     if (response.IsSuccessStatusCode)
     {
-        var responseBody = await response.Content.ReadAsStringAsync();
+        var responseBody = await response.Content.ReadAsByteArrayAsync();
         var result = JsonDocument.Parse(responseBody);
         var contentNode = result.RootElement.GetProperty("candidates").EnumerateArray().First().GetProperty("content").GetProperty("parts").EnumerateArray().First().GetProperty("text");
         var text = contentNode.GetString();
