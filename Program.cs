@@ -57,8 +57,7 @@ static async Task<string> SendRequestToGeminiApi(string bodyText)
     }
     };
 
-    var json = JsonSerializer.Serialize(requestBody);
-    var content = new StringContent(json, Encoding.UTF8, "application/json");
+    var content = JsonContent.Create(requestBody);
 
     var response = await httpClient.PostAsync($"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}", content);
 
