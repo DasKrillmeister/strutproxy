@@ -63,7 +63,7 @@ static async Task<string> SendRequestToGeminiApi(string bodyText)
 
     if (response.IsSuccessStatusCode)
     {
-        var responseBody = await response.Content.ReadAsStringAsync();
+        var responseBody = await response.Content.ReadAsByteArrayAsync();
         var result = JsonDocument.Parse(responseBody);
         var contentNode = result.RootElement.GetProperty("candidates").EnumerateArray().First().GetProperty("content").GetProperty("parts").EnumerateArray().First().GetProperty("text");
         var text = contentNode.GetString();
