@@ -33,7 +33,7 @@ app.MapPost("/", async context =>
 
     var response = await SendRequestToGeminiApi(bodyText);
 
-    context.Response.ContentType = "text/plain";
+    context.Response.ContentType = "text/plain; charset=UTF-8";
     await context.Response.WriteAsync(response);
 
 
